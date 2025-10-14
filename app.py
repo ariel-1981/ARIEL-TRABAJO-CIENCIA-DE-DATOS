@@ -20,7 +20,7 @@ if "df_ejercicios" not in st.session_state:
             st.error(f"❌ Error al leer el archivo: {e}")
             st.session_state.df_ejercicios = pd.DataFrame()
     else:
-        # Cargar DataFrame por defecto si no se sube archivo
+        # Crear estructura vacía
         st.session_state.df_ejercicios = pd.DataFrame(columns=[
             "id_ejercicio", "ejercicio", "grupo muscular", "objetivo", "duracion"
         ])
@@ -37,7 +37,7 @@ else:
 # --- Formulario para agregar ejercicios ---
 st.subheader("➕ Agregar nuevo ejercicio")
 
-with st.form("form_ejercicio"):
+with st.form("form_agregar"):
     ejercicio = st.text_input("Nombre del ejercicio")
     grupo = st.selectbox("Grupo muscular", ["Piernas", "Pecho", "Espalda", "Hombros", "Bíceps", "Tríceps", "Abdominales", "Glúteos"])
     objetivo = st.selectbox("Objetivo", ["Fuerza", "Hipertrofia", "Resistencia", "Rehabilitación"])
@@ -57,7 +57,34 @@ with st.form("form_ejercicio"):
             [df, pd.DataFrame([nuevo_ejercicio])],
             ignore_index=True
         )
-        st.success(f"Ejercicio '{ejercicio}' agregado con éxito.")
+        st.success(f"✅ Ejercicio '{ejercicio}' agregado con éxito.")
+
+# --- Formulario para modificar ejercicios ---
+st.subheader("✏️ Modificar ejercicio existente")
+
+if not df.empty:
+    ids_disponibles = df["id_ejercicio"].tolist()
+    id_modificar = st.selectbox("Selecciona el ID del ejercicio a modificar", ids_disponibles)
+
+    ejercicio_seleccionado = df[df["id_ejercicio"] == id_modificar].iloc[0]
+
+    with st.form("form_modificar"):
+        nuevo_nombre = st.text_input("Nombre del ejercicio", value=ejercicio_seleccionado["ejercicio"])
+        nuevo_grupo = st.selectbox("Grupo muscular", ["Piernas", "Pecho", "Espalda", "Hombros", "Bíceps", "Tríceps", "Abdominales", "Glúteos"], index=["Piernas", "Pecho", "Espalda", "Hombros", "Bíceps", "Tríceps", "Abdominales", "Glúteos"].index(ejercicio_seleccionado["grupo muscular"]))
+        nuevo_objetivo = st.selectbox("Objetivo", ["Fuerza", "Hipertrofia", "Resistencia", "Rehabilitación"], index=["Fuerza", "Hipertrofia", "Resistencia", "Rehabilitación"].index(ejercicio_seleccionado["objetivo"]))
+        nueva_duracion = st.number_input("Duración (en segundos)", min_value=10, max_value=600, step=5, value=int(ejercicio_seleccionado["duracion"]))
+        
+        modificado = st.form_submit_button("Guardar cambios")
+
+        if modificado:
+            idx = df[df["id_ejercicio"] == id_modificar].index[0]
+            st.session_state.df_ejercicios.at[idx, "ejercicio"] = nuevo_nombre
+            st.session_state.df_ejercicios.at[idx, "grupo muscular"] = nuevo_grupo
+            st.session_state.df_ejercicios.at[idx, "objetivo"] = nuevo_objetivo
+            st.session_state.df_ejercicios.at[idx, "duracion"] = nueva_duracion
+            st.success(f"✅ Ejercicio con ID {id_modificar} modificado correctamente.")
+else:
+    st.info("Primero debes cargar o agregar ejercicios para modificarlos.")
 
 # --- Descargar CSV ---
 st.subheader("⬇️ Descargar datos como CSV")
@@ -67,7 +94,8 @@ csv_data = st.session_state.df_ejercicios.to_csv(index=False).encode("utf-8")
 st.download_button(
     label="📥 Descargar CSV",
     data=csv_data,
-    file_name="ejercicios.csv",
+    file_name="ejercicios_actualizados.csv",
     mime="text/csv"
 )
+
 

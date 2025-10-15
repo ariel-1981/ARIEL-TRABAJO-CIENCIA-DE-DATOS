@@ -1,8 +1,14 @@
 import streamlit as st
+#Streamlit es una Libreria de Python para hacer Dashboards
+#Los Dashboards son Tableros de mando donde vemos los datos por ejemplo: en forma de Graficos, Tablas o KPIs
 import pandas as pd
+#Pandas es una Libreria de Python para trabajar con datos de manera eficiente y estructurada
 from io import StringIO
+#sirve para tratar una cadena de texto como un archivo
 
-st.set_page_config(page_title="Gestión de Ejercicios", layout="centered")
+st.set_page_config(page_title="Ejemplo de titulo", layout="centered")
+#set_page_config sirve para configurar el titulo de la aplicacion web, en este caso le pusimos 'Gestion de Ejercicios'
+
 
 st.title("🏋️ Gestión de Ejercicios con CSV")
 

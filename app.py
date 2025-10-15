@@ -10,7 +10,8 @@ st.set_page_config(page_title="Gestion de Ejercicios", layout="centered")
 #set_page_config sirve para configurar el titulo de la aplicacion web, en este caso le pusimos 'Gestion de Ejercicios'
 
 
-st.title("🏋️ Gestión de Ejercicios con CSV")
+st.title("🏋️Ejempolo de titulo")
+#st.title sirve para poner un texto en forma de Titulo en este caso pusimos 'Gestion de ejercicios con CSV'
 
 # --- Cargar CSV desde el usuario ---
 st.subheader("📂 Cargar archivo CSV")

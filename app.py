@@ -18,12 +18,16 @@ st.subheader("📂 Cargar archivo CSV")
 #st.subheader es para poner un Subtitulo
 
 uploaded_file = st.file_uploader("Selecciona un archivo CSV", type="csv")
+#aca estamos definiendo al archivo que vamos a recibir, y lo recibimos con st.file_uploader
+#st.file_uploader sirve para recibir archivos del usuario, lo que esta entre comillas, es lo que pide y el tipo de archivo lo definimos tambien
+
 
 if "df_ejercicios" not in st.session_state:
     if uploaded_file is not None:
         try:
             st.session_state.df_ejercicios = pd.read_csv(uploaded_file)
             st.success("✅ CSV cargado correctamente.")
+            #st.success es para un mensaje desde la app
         except Exception as e:
             st.error(f"❌ Error al leer el archivo: {e}")
             st.session_state.df_ejercicios = pd.DataFrame()
@@ -46,11 +50,16 @@ else:
 st.subheader("➕ Agregar nuevo ejercicio")
 
 with st.form("form_agregar"):
+    #st.form es para agregar un formulario
     ejercicio = st.text_input("Nombre del ejercicio")
+    #st.text_input es para recibir texto
     grupo = st.selectbox("Grupo muscular", ["Piernas", "Pecho", "Espalda", "Hombros", "Bíceps", "Tríceps", "Abdominales", "Glúteos"])
+    #st.selecbox es para recibir una categoria de las que definamos nosotros
     objetivo = st.selectbox("Objetivo", ["Fuerza", "Hipertrofia", "Resistencia", "Rehabilitación"])
     duracion = st.number_input("Duración (en segundos)", min_value=10, max_value=600, step=5)
+    #st.numer_input es para ingresar numeros por usuario
     submitted = st.form_submit_button("Agregar")
+    #st.form_sumit_button es para subir los datos del formulario(es un boton)
 
     if submitted:
         nuevo_id = df["id_ejercicio"].max() + 1 if not df.empty else 1
